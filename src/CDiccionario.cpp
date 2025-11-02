@@ -1,4 +1,4 @@
-#include "CDiccionario.h"
+#include "../include/CDiccionario.h"
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -60,6 +60,46 @@ long CDiccionario::buscaEntidad(cadena name){
         curr = e.sig;
     }
     return -1;
+}
+
+void CDiccionario::insertaEntidad(Entidad e, long dir)
+{
+    long dirAux = cabEntidades;
+    if(dirAux == -1){
+        dirAux = dir;
+        setCabecera(dir);
+    }
+    else{
+        Entidad aux;
+        aux = leeEntidad(dirAux);
+        if(strcmpi(e.nombre, aux.nombre) < 0){
+            e.sig = dirAux;
+            dirAux = dir;
+            reescribeEntidad(e, dir);
+            setCabecera(dir);
+        }
+        else{
+            Entidad prev;
+            long dirPrev = -1;
+            while(dirAux != -1 && strcmpi(e.nombre, aux.nombre) > 0){
+                dirPrev = dirAux;
+                prev = aux;
+                if(aux.sig != -1)
+                    aux = leeEntidad(dirAux);
+                dirAux = aux.sig;
+            }
+            if(dirAux != -1){
+                e.sig = dirAux;
+                reescribeEntidad(e, dir);
+                prev.sig = dir;
+                reescribeEntidad(prev, dirPrev);
+            }
+            else{
+                prev.sig = dir;
+                reescribeEntidad(prev, dirPrev);
+            }
+        }   
+    }
 }
 
 CDiccionario::~CDiccionario()

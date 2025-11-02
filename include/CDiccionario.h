@@ -1,14 +1,15 @@
 #ifndef CDICCIONARIO_H
 #define CDICCIONARIO_H
 #include<iostream>
-#include<ctsdio>
+#include<cstdio>
+#include<cstring>
 
 
 using namespace std;
 
 typedef char cadena[30];
 
-typedef struct Entidad{
+ typedef struct Entidad{
     cadena nombre;
     long sig;
     long atr;
@@ -36,6 +37,7 @@ class CDiccionario
 
     public:
         CDiccionario();
+        ~CDiccionario();
         void setCabecera(long dir);
         void getCabecera();
         Entidad capturaEntidad();
@@ -43,6 +45,7 @@ class CDiccionario
         long escribeEntidad(Entidad e);
         void reescribeEntidad(Entidad e, long dir);
         long buscaEntidad(cadena name);
+        void insertaEntidad(Entidad e, long dir);
 };
 
 #endif // CDICCIONARIO_H

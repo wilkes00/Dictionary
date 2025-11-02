@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1762118068 source:c:\vs code\c++\diccionario\src\main.cpp
+	"../include/CDiccionario.h"
+	"../include/CMenu.h"
+
+1762114886 c:\vs code\c++\diccionario\include\cdiccionario.h
+	<iostream>
+	<cstdio>
+	<cstring>
+
+1762116367 c:\vs code\c++\diccionario\include\cmenu.h
+
+1762040517 source:c:\vs code\c++\diccionario\src\cdiccionario.cpp
+	"../include/CDiccionario.h"
+	<iostream>
+	<cstdio>
+	<cstring>
+
+1762116403 source:c:\vs code\c++\diccionario\src\cmenu.cpp
+	<iostream>
+	<limits>
+	"../include/CDiccionario.h"
+	"../include/CMenu.h"
+

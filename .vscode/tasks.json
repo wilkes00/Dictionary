@@ -1,18 +1,33 @@
 {
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe compilar archivo activo",
-            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "type": "shell", // CAMBIO CLAVE: Usar tipo 'shell'
+            "label": "C/C++: g++.exe compilar diccionario (Shell)",
+            
+            // El comando debe ser una sola línea que contenga TODO
+            "command": "C:/msys64/ucrt64/bin/g++.exe",
+            
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                // 1. Incluir la ruta para los headers
+                "-I${workspaceFolder}/include", 
+                
+                // 2. ¡USO CONFIABLE DEL COMODÍN!
+                "${workspaceFolder}/src/*.cpp", 
+                
+                // 3. Definir el nombre del ejecutable
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${workspaceFolder}/main.exe" 
             ],
+            
             "options": {
-                "cwd": "C:\\msys64\\ucrt64\\bin"
+                // Especificamos la shell de MSYS2/MinGW que entiende el comodín
+                "shell": {
+                    "executable": "C:/msys64/usr/bin/bash.exe",
+                    "args": ["-c"]
+                },
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
@@ -21,7 +36,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Tarea generada por el depurador."
+            "detail": "Compila el proyecto completo usando la shell de MSYS2/MinGW para manejar *.cpp."
         }
     ],
     "version": "2.0.0"
