@@ -26,9 +26,7 @@
 			</Target>
 		</Build>
 		<Unit filename="include/CDiccionario.h" />
-		<Unit filename="include/CMenu.h" />
 		<Unit filename="src/CDiccionario.cpp" />
-		<Unit filename="src/CMenu.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

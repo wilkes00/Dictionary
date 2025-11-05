@@ -38,6 +38,12 @@ class CDiccionario
     public:
         CDiccionario();
         ~CDiccionario();
+        void menuPrincipal();
+        void menuEntidades();
+        void menuAtributos();
+        void menuDatos();
+        void limpiarBuffer();
+        void limpiarPantalla();
         void setCabecera(long dir);
         void getCabecera();
         Entidad capturaEntidad();

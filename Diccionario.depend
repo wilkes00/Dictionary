@@ -22,3 +22,18 @@
 	"../include/CDiccionario.h"
 	"../include/CMenu.h"
 
+1762311625 source:c:\users\usuario\vs code\c++\diccionario\src\cdiccionario.cpp
+	"../include/CDiccionario.h"
+	<iostream>
+	<cstdio>
+	<cstring>
+	<limits>
+
+1762308926 c:\users\usuario\vs code\c++\diccionario\include\cdiccionario.h
+	<iostream>
+	<cstdio>
+	<cstring>
+
+1762309282 source:c:\users\usuario\vs code\c++\diccionario\src\main.cpp
+	"../include/CDiccionario.h"
+
