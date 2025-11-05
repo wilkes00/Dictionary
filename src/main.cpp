@@ -5,8 +5,9 @@
 
 int main()
 {
-    CDiccionario *dicc;
+    CDiccionario *dicc = new CDiccionario();
     dicc->menuPrincipal();
+    delete dicc;
 
     return 0;
 }
