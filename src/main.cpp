@@ -1,7 +1,11 @@
 #include "../include/CDiccionario.h"
 
 
-
+/*
+Autores:
+Oman Leon Aguilar
+Leonardo Martinez Alvarado
+*/
 
 int main()
 {

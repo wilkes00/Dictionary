@@ -8,7 +8,8 @@ using namespace std;
 
 CDiccionario::CDiccionario()
 {
-    //ctor
+    f = NULL;
+    cabEntidades = -1;
 }
 
 void CDiccionario::limpiarPantalla(){
@@ -27,6 +28,42 @@ void CDiccionario::limpiarBuffer(){
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
+int CDiccionario::abrirArchivo(){
+    cadena nombre;
+    printf("== APERTURA DE ARCHIVO ==\n");
+    printf("Teclee el nombre del archivo a abrir:\n");
+    scanf("%s", nombre);
+    limpiarBuffer();
+
+    f = fopen(nombre, "rb+");
+    if(f == NULL){
+        printf("Error: El archivo no existe o no se puede abrir\n");
+        return 0;
+    }else{
+        printf("Archivo abierto con exito\n");
+        getCabecera();
+        return 1;
+    }
+}
+
+int CDiccionario::crearArchivo(){
+    cadena nombre;
+    printf("== CREACION DE ARCHIVO ==\n");
+    printf("Teclee el nombre del archivo a crear:\n");
+    scanf("%s", nombre);
+    limpiarBuffer();
+
+    f = fopen(nombre, "wb+");
+    if(f == NULL){
+        printf("Error al crear el archivo\n");
+        return 0;
+    }else{
+        printf("Archivo creado con exito\n");
+        setCabecera(-1);
+        return 1;
+    }
+}
+
 void CDiccionario::menuPrincipal(){
     int opcion;
     do{
@@ -42,13 +79,14 @@ void CDiccionario::menuPrincipal(){
             case 1:
                 limpiarPantalla();
                 cout << "\nFuncion Nuevo Diccionario\n";
-                menuEntidades();
+                if(crearArchivo())
+                    menuEntidades();
                 break;
             case 2:
                 limpiarPantalla();
                 cout << "\nFuncion Abrir Diccionario\n";
-                menuEntidades();
-
+                if(abrirArchivo())
+                    menuEntidades();
                 break;
             case 3:
                 cout << "Saliendo del programa\n";
@@ -80,18 +118,22 @@ void CDiccionario::menuEntidades(){
             case 1:
                 limpiarPantalla();
                 cout << "\nFuncion Nueva Entidad\n";
+                altaEntidad();
                 break;
             case 2:
                 limpiarPantalla();
                 cout << "\nFuncion Consultar Entidad\n";
+                consultaEntidades();
                 break;
             case 3:
                 limpiarPantalla();
                 cout << "\nFuncion Eliminar Entidad\n";
+                bajaEntidad();
                 break;
             case 4:
                 limpiarPantalla();
                 cout << "\nFuncion Modificar Entidad\n";
+                modificaEntidad();
                 break;
             case 5:
                 limpiarPantalla();
@@ -104,10 +146,10 @@ void CDiccionario::menuEntidades(){
                 menuDatos();
                 break;
             case 7:
-                limpiarPantalla();
                 cout << "\nRegresando al menu Principal\n";
                 break;
             default:
+                limpiarPantalla();
                 cout << "Opcion invalida: ingrese una opcion valida\n";
                 break;
         }
@@ -132,23 +174,18 @@ void CDiccionario::menuAtributos(){
 
         switch(opcion){
             case 1:
-                limpiarPantalla();
                 cout << "\nFuncion Nuevo Atributo\n";
                 break;
             case 2:
-                limpiarPantalla();
                 cout << "\nFuncion Consultar Atributo\n";
                 break;
             case 3:
-                limpiarPantalla();
                 cout << "\nFuncion Eliminar Atributo\n";
                 break;
             case 4:
-                limpiarPantalla();
                 cout << "\nFuncion Modificar Atributo\n";
                 break;
             case 5:
-                limpiarPantalla();
                 cout << "\nRegresando al menu Entidades\n";
                 break;
             default:
@@ -216,6 +253,8 @@ Entidad CDiccionario::capturaEntidad(){
     Entidad e;
     cout<<" Ingrese el nombre de la Entidad: ";
     cin>>e.nombre;
+    limpiarBuffer();
+
     e.sig = -1;
     e.atr = -1;
     e.dato = -1;
@@ -256,6 +295,7 @@ long CDiccionario::buscaEntidad(cadena name){
 
 void CDiccionario::insertaEntidad(Entidad e, long dir)
 {
+    getCabecera();
     long dirAux = cabEntidades;
     if(dirAux == -1){
         dirAux = dir;
@@ -292,6 +332,95 @@ void CDiccionario::insertaEntidad(Entidad e, long dir)
             }
         }
     }
+}
+
+void CDiccionario::consultaEntidades(){
+    Entidad ent;
+    getCabecera();
+    long auxDir = cabEntidades;
+
+    while(auxDir != -1){
+        ent = leeEntidad(auxDir);
+        printf("Nombre de la Entidad: %s\n", ent.nombre);
+        printf("Apuntador a siguiente Entidad: %ld\n", ent.sig);
+        printf("Apuntador a Atributo: %ld\n", ent.atr);
+        printf("Apuntador a Data: %ld\n", ent.dato);
+        auxDir = ent.sig;
+    }
+}
+
+void CDiccionario::altaEntidad(){
+    long dir = -1;
+    Entidad ent = capturaEntidad();
+    if(buscaEntidad(ent.nombre) == -1){
+        dir = escribeEntidad(ent);
+        insertaEntidad(ent, dir);
+        printf("Entidad agregada con exito!\n");
+    }
+    else
+        printf("Error: No puede agregarse la Entidad porque ya existe\n");
+
+}
+
+void CDiccionario::bajaEntidad(){
+    cadena name;
+    printf("Ingrese el nombre de la Entidad a eliminar: \n");
+    scanf("%s", name);
+    limpiarBuffer();
+
+    if(buscaEntidad(name) != -1)
+        eliminaEntidad(name);
+    else
+        printf("La entidad no existe");
+}
+
+long CDiccionario::eliminaEntidad(cadena name){
+    getCabecera();
+    long auxDir = cabEntidades;
+    Entidad ent;
+    ent = leeEntidad(auxDir);
+
+    if(strcmpi(ent.nombre, name) == 0){
+        setCabecera(ent.sig);
+        return auxDir;
+    }
+    else{
+        long prevDir = -1;
+        Entidad prev;
+        while(auxDir != -1 && strcmpi(ent.nombre, name) != 0){
+            prevDir = auxDir;
+            prev = ent;
+            auxDir = ent.sig;
+            if(auxDir != -1)
+                ent = leeEntidad(auxDir);
+        }
+        if(auxDir != -1){
+            prev.sig = ent.sig;
+            reescribeEntidad(prev, prevDir);
+        }
+    }
+    return auxDir;
+}
+
+void CDiccionario::modificaEntidad(){
+	cadena name;
+	printf("Ingrese el nombre de la Entidad a modificar: \n");
+	scanf("%s",name);
+	limpiarBuffer();
+
+	if(buscaEntidad(name)!= -1){
+		Entidad ent;
+		ent=capturaEntidad();
+		if(buscaEntidad(ent.nombre)!= -1){
+			printf("Error: Ya existe una Entidad de nombre %s",ent.nombre);
+		}else{
+			long dir=eliminaEntidad(name);
+			reescribeEntidad(ent,dir);
+			insertaEntidad(ent,dir);
+		}
+	}else{
+		printf("Error: No existe la Entidad que desea modificar\n");
+	}
 }
 
 CDiccionario::~CDiccionario()
