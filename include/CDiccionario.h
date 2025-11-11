@@ -52,6 +52,13 @@ class CDiccionario
         void reescribeEntidad(Entidad e, long dir);
         long buscaEntidad(cadena name);
         void insertaEntidad(Entidad e, long dir);
+        void consultaEntidades();
+        void altaEntidad();
+        void bajaEntidad();
+        long eliminaEntidad(cadena name);
+        void modificaEntidad();
+        int abrirArchivo();
+        int crearArchivo();
 };
 
 #endif // CDICCIONARIO_H

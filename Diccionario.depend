@@ -29,11 +29,19 @@
 	<cstring>
 	<limits>
 
-1762308926 c:\users\usuario\vs code\c++\diccionario\include\cdiccionario.h
+1762476968 c:\users\usuario\vs code\c++\diccionario\include\cdiccionario.h
 	<iostream>
 	<cstdio>
 	<cstring>
 
-1762309282 source:c:\users\usuario\vs code\c++\diccionario\src\main.cpp
+1762384482 source:c:\users\usuario\vs code\c++\diccionario\src\main.cpp
 	"../include/CDiccionario.h"
+
+1762384482 source:d:\vs code\c++\diccionario\src\main.cpp
+	"../include/CDiccionario.h"
+
+1762476968 d:\vs code\c++\diccionario\include\cdiccionario.h
+	<iostream>
+	<cstdio>
+	<cstring>
 

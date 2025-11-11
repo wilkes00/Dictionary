@@ -53,14 +53,21 @@ int CDiccionario::crearArchivo(){
     scanf("%s", nombre);
     limpiarBuffer();
 
-    f = fopen(nombre, "wb+");
-    if(f == NULL){
-        printf("Error al crear el archivo\n");
+    f = fopen(nombre, "rb");
+    if(f != NULL){
+        printf("Ya existe un diccionario con ese nombre\n");
+        fclose(f);
         return 0;
     }else{
-        printf("Archivo creado con exito\n");
-        setCabecera(-1);
-        return 1;
+        f = fopen(nombre, "wb+");
+        if(f == NULL){
+            printf("Error al crear el archivo\n");
+            return 0;
+        }else{
+            printf("Archivo creado con exito\n");
+            setCabecera(-1);
+            return 1;
+        }
     }
 }
 
@@ -78,13 +85,11 @@ void CDiccionario::menuPrincipal(){
         switch(opcion){
             case 1:
                 limpiarPantalla();
-                cout << "\nFuncion Nuevo Diccionario\n";
                 if(crearArchivo())
                     menuEntidades();
                 break;
             case 2:
                 limpiarPantalla();
-                cout << "\nFuncion Abrir Diccionario\n";
                 if(abrirArchivo())
                     menuEntidades();
                 break;
@@ -117,32 +122,26 @@ void CDiccionario::menuEntidades(){
         switch(opcion){
             case 1:
                 limpiarPantalla();
-                cout << "\nFuncion Nueva Entidad\n";
                 altaEntidad();
                 break;
             case 2:
                 limpiarPantalla();
-                cout << "\nFuncion Consultar Entidad\n";
                 consultaEntidades();
                 break;
             case 3:
                 limpiarPantalla();
-                cout << "\nFuncion Eliminar Entidad\n";
                 bajaEntidad();
                 break;
             case 4:
                 limpiarPantalla();
-                cout << "\nFuncion Modificar Entidad\n";
                 modificaEntidad();
                 break;
             case 5:
                 limpiarPantalla();
-                cout << "\nFuncion Menu Atributos\n";
                 menuAtributos();
                 break;
             case 6:
                 limpiarPantalla();
-                cout << "\nFuncion Menu Datos\n";
                 menuDatos();
                 break;
             case 7:
@@ -297,36 +296,38 @@ void CDiccionario::insertaEntidad(Entidad e, long dir)
 {
     getCabecera();
     long dirAux = cabEntidades;
-    if(dirAux == -1){
+
+    if(dirAux == -1){     // caso 1, la lista esta vacia
         dirAux = dir;
         setCabecera(dir);
     }
-    else{
+    else{ // la lista no esta vacia
         Entidad aux;
         aux = leeEntidad(dirAux);
-        if(strcmpi(e.nombre, aux.nombre) < 0){
+        if(strcmpi(e.nombre, aux.nombre) < 0){ // caso 2 insertar al inicio
             e.sig = dirAux;
             dirAux = dir;
             reescribeEntidad(e, dir);
             setCabecera(dir);
         }
-        else{
+        else{ // insertar en medio o al final
             Entidad prev;
             long dirPrev = -1;
             while(dirAux != -1 && strcmpi(e.nombre, aux.nombre) > 0){
                 dirPrev = dirAux;
                 prev = aux;
+
                 if(aux.sig != -1)
                     aux = leeEntidad(dirAux);
                 dirAux = aux.sig;
             }
-            if(dirAux != -1){
+            if(dirAux != -1){ // caso 3 insertar en medio
                 e.sig = dirAux;
                 reescribeEntidad(e, dir);
                 prev.sig = dir;
                 reescribeEntidad(prev, dirPrev);
             }
-            else{
+            else{ // caso 4 insertar al final
                 prev.sig = dir;
                 reescribeEntidad(prev, dirPrev);
             }
@@ -338,6 +339,9 @@ void CDiccionario::consultaEntidades(){
     Entidad ent;
     getCabecera();
     long auxDir = cabEntidades;
+
+    if(auxDir == -1)
+        printf("El diccionario esta vacio\n");
 
     while(auxDir != -1){
         ent = leeEntidad(auxDir);
@@ -371,7 +375,7 @@ void CDiccionario::bajaEntidad(){
     if(buscaEntidad(name) != -1)
         eliminaEntidad(name);
     else
-        printf("La entidad no existe");
+        printf("Error: La entidad no existe\n");
 }
 
 long CDiccionario::eliminaEntidad(cadena name){
