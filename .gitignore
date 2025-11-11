@@ -1,1 +1,7 @@
 .vscode
+*.bin
+*.obj
+*.exe
+*.log
+*.dat
+*.o
