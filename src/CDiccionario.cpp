@@ -268,7 +268,9 @@ Entidad CDiccionario::leeEntidad(long dir){
 }
 
 long CDiccionario::escribeEntidad(Entidad e){
-    long dir = ftell(f);
+    long dir = -1;
+    fseek(f, 0, SEEK_END);
+    dir = ftell(f);
     fwrite(&e, sizeof(Entidad), 1, f);
     return dir;
 }
@@ -316,10 +318,10 @@ void CDiccionario::insertaEntidad(Entidad e, long dir)
             while(dirAux != -1 && strcmpi(e.nombre, aux.nombre) > 0){
                 dirPrev = dirAux;
                 prev = aux;
-
-                if(aux.sig != -1)
-                    aux = leeEntidad(dirAux);
                 dirAux = aux.sig;
+                if(dirAux != -1)
+                    aux = leeEntidad(dirAux);
+
             }
             if(dirAux != -1){ // caso 3 insertar en medio
                 e.sig = dirAux;
