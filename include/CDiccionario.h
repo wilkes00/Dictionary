@@ -18,10 +18,11 @@ typedef char cadena[30];
 
 typedef struct Atributo{
     cadena nombre;
+    int tam;
     int tipo; // 1. int, 2. float, 3. char
     long sig;
-    long dirDatos;
-    int tamDatos;
+    char iskp; //S, N
+    char descripcion[50];
 };
 
 class CDiccionario
@@ -29,7 +30,7 @@ class CDiccionario
     private:
         FILE* f;
         Entidad activa;
-        long posEnt;
+        long posEntActiva;
         int nAtributos;
         Atributo arrAtributos[50];
         long tamBloque;
@@ -38,6 +39,8 @@ class CDiccionario
     public:
         CDiccionario();
         ~CDiccionario();
+        int abrirArchivo();
+        int crearArchivo();
         void menuPrincipal();
         void menuEntidades();
         void menuAtributos();
@@ -57,8 +60,15 @@ class CDiccionario
         void bajaEntidad();
         long eliminaEntidad(cadena name);
         void modificaEntidad();
-        int abrirArchivo();
-        int crearArchivo();
+        void altaAtributo();
+        void insertaAtributo(Atributo nuevo,long dir);
+        Atributo capturaAtributo();
+        long escribeAtributo(Atributo atr);
+        void reescribeAtributo(Atributo atr, long dir);
+        long buscaAtributo(char nombre[50]);
+        Atributo leeAtributo(long dir);
+        void consultaAtributos();
+
 };
 
 #endif // CDICCIONARIO_H

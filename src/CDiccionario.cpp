@@ -82,14 +82,13 @@ void CDiccionario::menuPrincipal(){
         cin >>opcion;
         limpiarBuffer();
 
+
         switch(opcion){
             case 1:
-                limpiarPantalla();
                 if(crearArchivo())
                     menuEntidades();
                 break;
             case 2:
-                limpiarPantalla();
                 if(abrirArchivo())
                     menuEntidades();
                 break;
@@ -115,40 +114,33 @@ void CDiccionario::menuEntidades(){
         cout << "6. Menu Datos\n";
         cout << "7. Regresar a Menu Principal\n";
         cout << "Seleccione una opcion: \n";
-
         cin >>opcion;
         limpiarBuffer();
 
+
         switch(opcion){
             case 1:
-                limpiarPantalla();
                 altaEntidad();
                 break;
             case 2:
-                limpiarPantalla();
                 consultaEntidades();
                 break;
             case 3:
-                limpiarPantalla();
                 bajaEntidad();
                 break;
             case 4:
-                limpiarPantalla();
                 modificaEntidad();
                 break;
             case 5:
-                limpiarPantalla();
                 menuAtributos();
                 break;
             case 6:
-                limpiarPantalla();
                 menuDatos();
                 break;
             case 7:
                 cout << "\nRegresando al menu Principal\n";
                 break;
             default:
-                limpiarPantalla();
                 cout << "Opcion invalida: ingrese una opcion valida\n";
                 break;
         }
@@ -158,41 +150,54 @@ void CDiccionario::menuEntidades(){
 }
 
 void CDiccionario::menuAtributos(){
-    int opcion;
-    do{
-        cout << "\n---- Menu Atributos ----\n";
-        cout << "1. Nuevo Atributo\n";
-        cout << "2. Consultar Atributo\n";
-        cout << "3. Eliminar Atributo\n";
-        cout << "4. Modificar Atributo\n";
-        cout << "5. Regresar a Menu Entidades\n";
-        cout << "Seleccione una opcion: \n";
+    cadena nomEnt;
+    long dir = -1;
+    cout << "Ingrese el nombre de la Entidad en la que se trabajara (Entidad activa):\n";
+    cin >> nomEnt;
+    limpiarBuffer();
+    dir = buscaEntidad(nomEnt);
+    if(dir != -1){
+        activa = leeEntidad(dir);
+        posEntActiva = dir;
 
-        cin >>opcion;
-        limpiarBuffer();
+        int opcion;
+        do{
+            cout << "\n---- Menu Atributos ----\n";
+            cout << "1. Nuevo Atributo\n";
+            cout << "2. Consultar Atributo\n";
+            cout << "3. Eliminar Atributo\n";
+            cout << "4. Modificar Atributo\n";
+            cout << "5. Regresar a Menu Entidades\n";
+            cout << "Seleccione una opcion: \n";
+            cin >>opcion;
+            limpiarBuffer();
 
-        switch(opcion){
-            case 1:
-                cout << "\nFuncion Nuevo Atributo\n";
-                break;
-            case 2:
-                cout << "\nFuncion Consultar Atributo\n";
-                break;
-            case 3:
-                cout << "\nFuncion Eliminar Atributo\n";
-                break;
-            case 4:
-                cout << "\nFuncion Modificar Atributo\n";
-                break;
-            case 5:
-                cout << "\nRegresando al menu Entidades\n";
-                break;
-            default:
-                cout << "Opcion invalida: ingrese una opcion valida\n";
-                break;
-        }
-    }while(opcion != 5);
 
+            switch(opcion){
+                case 1:
+                    altaAtributo();
+                    break;
+                case 2:
+                    consultaAtributos();
+                    break;
+                case 3:
+                    cout << "\nFuncion Eliminar Atributo\n";
+                    break;
+                case 4:
+                    cout << "\nFuncion Modificar Atributo\n";
+                    break;
+                case 5:
+                    cout << "\nRegresando al menu Entidades\n";
+                    break;
+                default:
+                    cout << "Opcion invalida: ingrese una opcion valida\n";
+                    break;
+            }
+        }while(opcion != 5);
+    }
+    else{
+        cout << "La entidad no existe\n";
+    }
 }
 
 void CDiccionario::menuDatos(){
@@ -205,29 +210,24 @@ void CDiccionario::menuDatos(){
         cout << "4. Modificar Registro\n";
         cout << "5. Regresar a Menu Entidades\n";
         cout << "Seleccione una opcion: \n";
-
         cin >>opcion;
         limpiarBuffer();
 
+
          switch(opcion){
             case 1:
-                limpiarPantalla();
                 cout << "\nFuncion Nuevo Registro\n";
                 break;
             case 2:
-                limpiarPantalla();
                 cout << "\nFuncion Consultar Registro\n";
                 break;
             case 3:
-                limpiarPantalla();
                 cout << "\nFuncion Eliminar Registro\n";
                 break;
             case 4:
-                limpiarPantalla();
                 cout << "\nFuncion Modificar Registro\n";
                 break;
             case 5:
-                limpiarPantalla();
                 cout << "\nRegresando al menu Entidades\n";
                 break;
             default:
@@ -250,7 +250,7 @@ void CDiccionario::getCabecera(){
 
 Entidad CDiccionario::capturaEntidad(){
     Entidad e;
-    cout<<" Ingrese el nombre de la Entidad: ";
+    cout<<" Ingrese el nombre de la Entidad: \n";
     cin>>e.nombre;
     limpiarBuffer();
 
@@ -427,6 +427,135 @@ void CDiccionario::modificaEntidad(){
 	}else{
 		printf("Error: No existe la Entidad que desea modificar\n");
 	}
+}
+
+//METODOS DE ATRIBUTOS
+
+Atributo CDiccionario::capturaAtributo(){
+    Atributo atr;
+	printf("Escribe el nombre de el atributo (columna):\n");
+	scanf("%s", atr.nombre);
+	limpiarBuffer();
+	printf("Que tipo de dato es? \n1.char \n2.int \n3.float \n4.double \n5.long");
+	scanf("%d", &atr.tipo);
+	limpiarBuffer();
+	printf("Es clave primaria? (S/N)\n");
+	scanf("%c", &atr.iskp);
+	atr.sig=-1;
+	return atr;
+}
+
+long CDiccionario::escribeAtributo(Atributo atr)
+{
+	long dir=-1;
+
+	fseek(f,0,SEEK_END);
+	dir=ftell(f);
+	fwrite(&atr, sizeof(Atributo), 1, f);
+	return dir;
+}
+
+void CDiccionario::reescribeAtributo(Atributo atr, long dir) {
+	fseek(f, dir, SEEK_SET);
+	fwrite(&atr, sizeof(Atributo), 1, f);
+}
+
+long CDiccionario::buscaAtributo(char nombre[50]) {
+	long dir = activa.atr;
+
+	while (dir != -1) {
+		Atributo atr = leeAtributo(dir);
+		if (strcmp(atr.nombre, nombre) == 0) {
+			return dir;
+		}
+		dir = atr.sig;
+	}
+
+	return -1;
+}
+
+Atributo CDiccionario::leeAtributo(long dir) {
+
+	Atributo atr;
+	fseek(f, dir, SEEK_SET);
+	fread(&atr, sizeof(Atributo), 1, f);
+	return atr;
+}
+
+void CDiccionario::altaAtributo(){
+	Atributo atr=capturaAtributo();
+	long dir;
+	if(buscaAtributo(atr.nombre)!=-1){
+		printf("El atributo ya existe\n");
+		return;
+	}
+	dir=escribeAtributo(atr);
+	insertaAtributo(atr,dir);
+	printf("Atributo creado correctamente\n");
+}
+
+void CDiccionario::insertaAtributo(Atributo atr, long dir){
+    if (activa.atr == -1)
+	{
+		activa.atr = dir;
+		reescribeEntidad(activa, posEntActiva);
+	}
+	else
+	{
+		Atributo aux = leeAtributo(activa.atr);
+
+		if (strcmp(atr.nombre, aux.nombre) < 0)
+		{
+			atr.sig = activa.atr;
+			activa.atr = dir;
+			reescribeAtributo(atr, dir);
+			reescribeEntidad(activa, posEntActiva);
+		}
+		else
+		{
+			long cab = activa.atr;
+			long dirAnt = activa.atr;
+			Atributo ant = aux;
+
+			while (cab != -1 && strcmp(atr.nombre, aux.nombre) > 0)
+			{
+				dirAnt = cab;
+				ant = aux;
+                cab = aux.sig;
+				if (cab != -1)
+				{
+					aux = leeAtributo(aux.sig);
+				}
+			}
+
+			if (cab != -1)
+			{
+				atr.sig = cab;
+				reescribeAtributo(atr, dir);
+			}
+			ant.sig = dir;
+			reescribeAtributo(ant, dirAnt);
+		}
+	}
+}
+
+void CDiccionario::consultaAtributos(){
+    Atributo atr;
+    long dir = activa.atr;
+    while(dir != -1){
+        atr = leeAtributo(dir);
+        printf("Nombre de Atributo: %s\n", atr.nombre);
+        printf("Apuntador a siguiente Atributo: %ld\n", atr.sig);
+        printf("Tipo de atributo: %d\n", atr.tipo);
+        printf("Tamano: %d\n", atr.tam);
+        printf("Es clave primaria?\n");
+        if(atr.iskp == 'S')
+            printf("SI\n");
+        else if(atr.iskp == 'N')
+            printf("NO\n");
+
+        dir = atr.sig;
+    }
 }
 
 CDiccionario::~CDiccionario()
