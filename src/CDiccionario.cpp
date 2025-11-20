@@ -152,7 +152,7 @@ void CDiccionario::menuEntidades(){
 void CDiccionario::menuAtributos(){
     cadena nomEnt;
     long dir = -1;
-    cout << "Ingrese el nombre de la Entidad en la que se trabajara (Entidad activa):\n";
+    cout << "Ingrese el nombre de la Entidad en la que se trabajara (Entidad activa): \n";
     cin >> nomEnt;
     limpiarBuffer();
     dir = buscaEntidad(nomEnt);
@@ -436,7 +436,7 @@ Atributo CDiccionario::capturaAtributo(){
 	printf("Escribe el nombre de el atributo (columna):\n");
 	scanf("%s", atr.nombre);
 	limpiarBuffer();
-	printf("Que tipo de dato es? \n1.char \n2.int \n3.float \n4.double \n5.long");
+	printf("Que tipo de dato es? \n1.char \n2.int \n3.float \n4.double \n5.long\n");
 	scanf("%d", &atr.tipo);
 	limpiarBuffer();
 	printf("Es clave primaria? (S/N)\n");
@@ -537,6 +537,30 @@ void CDiccionario::insertaAtributo(Atributo atr, long dir){
 			reescribeAtributo(ant, dirAnt);
 		}
 	}
+}
+
+long CDiccionario::eliminaAtributo(cadena name){
+    long dir = activa.atr;
+    Atributo atr = leeAtributo(activa.atr);
+    if(strcmpi(atr.nombre, name) == 0){
+        activa.atr = atr.sig;
+        reescribeEntidad(activa, posEntActiva);
+        return dir;
+    }
+    long prev = -1;
+    Atributo atrPrev;
+    while(strcmpi(atr.nombre, name) != 0 && dir != -1){
+        prev = dir;
+        atrPrev = atr;
+        dir = atr.sig;
+        if(dir != -1)
+            atr = leeAtributo(dir);
+    }
+    if(dir != -1){
+        prev = atr.sig;
+        reescribeAtributo(atrPrev, prev);
+    }
+    return dir;
 }
 
 void CDiccionario::consultaAtributos(){

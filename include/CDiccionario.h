@@ -68,6 +68,7 @@ class CDiccionario
         long buscaAtributo(char nombre[50]);
         Atributo leeAtributo(long dir);
         void consultaAtributos();
+        long eliminaAtributo(cadena name);
 
 };
 
