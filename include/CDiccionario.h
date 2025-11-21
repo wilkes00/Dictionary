@@ -58,6 +58,7 @@ class CDiccionario
         void consultaEntidades();
         void altaEntidad();
         void bajaEntidad();
+        void bajaAtributo();
         long eliminaEntidad(cadena name);
         void modificaEntidad();
         void altaAtributo();
@@ -69,6 +70,7 @@ class CDiccionario
         Atributo leeAtributo(long dir);
         void consultaAtributos();
         long eliminaAtributo(cadena name);
+        void modificaAtributo();
 
 };
 

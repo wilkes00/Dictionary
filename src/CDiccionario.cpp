@@ -181,10 +181,10 @@ void CDiccionario::menuAtributos(){
                     consultaAtributos();
                     break;
                 case 3:
-                    cout << "\nFuncion Eliminar Atributo\n";
+                    bajaAtributo();
                     break;
                 case 4:
-                    cout << "\nFuncion Modificar Atributo\n";
+                    modificaAtributo();
                     break;
                 case 5:
                     cout << "\nRegresando al menu Entidades\n";
@@ -439,6 +439,14 @@ Atributo CDiccionario::capturaAtributo(){
 	printf("Que tipo de dato es? \n1.char \n2.int \n3.float \n4.double \n5.long\n");
 	scanf("%d", &atr.tipo);
 	limpiarBuffer();
+
+	if(atr.tipo == 1){
+        printf("Tamano de la cadena: \n");
+        scanf("%d", &atr.tam);
+	}
+	else
+        atr.tam = 1;
+
 	printf("Es clave primaria? (S/N)\n");
 	scanf("%c", &atr.iskp);
 	atr.sig=-1;
@@ -556,10 +564,8 @@ long CDiccionario::eliminaAtributo(cadena name){
         if(dir != -1)
             atr = leeAtributo(dir);
     }
-    if(dir != -1){
-        prev = atr.sig;
-        reescribeAtributo(atrPrev, prev);
-    }
+    atrPrev.sig = atr.sig;
+    reescribeAtributo(atrPrev, prev);
     return dir;
 }
 
@@ -580,6 +586,41 @@ void CDiccionario::consultaAtributos(){
 
         dir = atr.sig;
     }
+}
+
+void CDiccionario::bajaAtributo(){
+    cadena name;
+    printf("Ingrese el nombre del Atributo a eliminar: \n");
+    scanf("%s", name);
+    limpiarBuffer();
+
+    if(buscaAtributo(name) != -1)
+        eliminaAtributo(name);
+    else
+        printf("Error: La entidad no existe\n");
+}
+
+void CDiccionario::modificaAtributo(){
+    cadena name;
+    printf("Ingrese el nombre del Atributo a modificar:\n");
+    scanf("%s", name);
+    limpiarBuffer();
+
+    if(buscaAtributo(name) != -1){
+        Atributo atr = capturaAtributo();
+        long dir2 = buscaAtributo(atr.nombre);
+
+        if(dir2 == -1 || strcmpi(name, atr.nombre) == 0){
+            long dir = eliminaAtributo(name);
+            reescribeAtributo(atr, dir);
+            insertaAtributo(atr, dir);
+        }
+        else{
+            printf("No se pudo modificar el atributo\n");
+        }
+    }
+    else
+        printf("El atributo no existe\n");
 }
 
 CDiccionario::~CDiccionario()
